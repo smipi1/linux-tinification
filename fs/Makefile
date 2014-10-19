@@ -5,7 +5,7 @@
 # Rewritten to use lists instead of if-statements.
 # 
 
-obj-y :=	open.o read_write.o file_table.o super.o \
+obj-y :=	open.o read_write.o sendfile.o file_table.o super.o \
 		char_dev.o stat.o exec.o pipe.o namei.o fcntl.o \
 		ioctl.o readdir.o select.o dcache.o inode.o \
 		attr.o bad_inode.o file.o filesystems.o namespace.o \
@@ -18,7 +18,6 @@ obj-y +=	buffer.o block_dev.o direct-io.o mpage.o
 else
 obj-y +=	no-block.o
 endif
-
 obj-$(CONFIG_PROC_FS) += proc_namespace.o
 
 obj-y				+= notify/
