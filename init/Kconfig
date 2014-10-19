@@ -1547,6 +1547,16 @@ config ADVISE_SYSCALLS
 	  applications use these syscalls, you can disable this option to save
 	  space.
 
+config SENDFILE_SYSCALL
+	bool "Enable sendfile syscall" if EXPERT
+	default y
+	help
+	  This option enables the sendfile syscall, used by applications to copy
+	  data between file descriptors. Because sendfile performs the copying
+	  within the kernel, it is more efficient than the combination of read
+	  and write.  If building an embedded system where no applications use
+	  the sendfile syscall, you can disable this option to save space.
+
 config PCI_QUIRKS
 	default y
 	bool "Enable PCI quirk workarounds" if EXPERT
