@@ -1512,6 +1512,32 @@ struct file_operations {
 	int (*show_fdinfo)(struct seq_file *m, struct file *f);
 };
 
+#ifdef CONFIG_SYSCALL_SPLICE
+
+/*
+ * Define and init the splice_read member of a file_operations struct
+ */
+#define SPLICE_READ_INIT(read) .splice_read = read,
+
+/*
+ * Define and init the splice_read member of a file_operations struct
+ */
+#define SPLICE_WRITE_INIT(write) .splice_write = write,
+
+#else /* #ifdef CONFIG_SYSCALL_SPLICE */
+
+/*
+ * Define and init the splice_read member of a file_operations struct
+ */
+#define SPLICE_READ_INIT(read)
+
+/*
+ * Define and init the splice_read member of a file_operations struct
+ */
+#define SPLICE_WRITE_INIT(write)
+
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
+
 struct inode_operations {
 	struct dentry * (*lookup) (struct inode *,struct dentry *, unsigned int);
 	void * (*follow_link) (struct dentry *, struct nameidata *);
