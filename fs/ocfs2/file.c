@@ -2430,6 +2430,7 @@ out_sems:
 	return ret;
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 static ssize_t ocfs2_file_splice_read(struct file *in,
 				      loff_t *ppos,
 				      struct pipe_inode_info *pipe,
@@ -2459,6 +2460,7 @@ static ssize_t ocfs2_file_splice_read(struct file *in,
 bail:
 	return ret;
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 static ssize_t ocfs2_file_read_iter(struct kiocb *iocb,
 				   struct iov_iter *to)
@@ -2629,8 +2631,8 @@ const struct file_operations ocfs2_fops = {
 #endif
 	.lock		= ocfs2_lock,
 	.flock		= ocfs2_flock,
-	.splice_read	= ocfs2_file_splice_read,
-	.splice_write	= iter_file_splice_write,
+	SPLICE_READ_INIT(ocfs2_file_splice_read)
+	SPLICE_WRITE_INIT(iter_file_splice_write)
 	.fallocate	= ocfs2_fallocate,
 };
 
@@ -2676,8 +2678,8 @@ const struct file_operations ocfs2_fops_no_plocks = {
 	.compat_ioctl   = ocfs2_compat_ioctl,
 #endif
 	.flock		= ocfs2_flock,
-	.splice_read	= ocfs2_file_splice_read,
-	.splice_write	= iter_file_splice_write,
+	SPLICE_READ_INIT(ocfs2_file_splice_read)
+	SPLICE_WRITE_INIT(iter_file_splice_write)
 	.fallocate	= ocfs2_fallocate,
 };
 
