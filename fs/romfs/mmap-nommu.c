@@ -74,7 +74,7 @@ const struct file_operations romfs_ro_fops = {
 	.llseek			= generic_file_llseek,
 	.read			= new_sync_read,
 	.read_iter		= generic_file_read_iter,
-	.splice_read		= generic_file_splice_read,
+	SPLICE_READ_INIT(generic_file_splice_read)
 	.mmap			= romfs_mmap,
 	.get_unmapped_area	= romfs_get_unmapped_area,
 };
