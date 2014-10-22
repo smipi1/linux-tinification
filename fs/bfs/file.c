@@ -28,7 +28,7 @@ const struct file_operations bfs_file_operations = {
 	.write		= new_sync_write,
 	.write_iter	= generic_file_write_iter,
 	.mmap		= generic_file_mmap,
-	.splice_read	= generic_file_splice_read,
+	SPLICE_READ_INIT(generic_file_splice_read)
 };
 
 static int bfs_move_block(unsigned long from, unsigned long to,
