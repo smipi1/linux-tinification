@@ -181,7 +181,7 @@ const struct file_operations fat_file_operations = {
 	.compat_ioctl	= fat_generic_compat_ioctl,
 #endif
 	.fsync		= fat_file_fsync,
-	.splice_read	= generic_file_splice_read,
+	SPLICE_READ_INIT(generic_file_splice_read)
 };
 
 static int fat_cont_expand(struct inode *inode, loff_t size)
