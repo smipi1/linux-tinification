@@ -530,6 +530,7 @@ static int vvp_io_read_start(const struct lu_env *env,
 		LASSERT(cio->cui_iocb->ki_pos == pos);
 		result = generic_file_read_iter(cio->cui_iocb, cio->cui_iter);
 		break;
+#ifdef CONFIG_SYSCALL_SPLICE
 	case IO_SPLICE:
 		result = generic_file_splice_read(file, &pos,
 				vio->u.splice.cui_pipe, cnt,
@@ -539,6 +540,7 @@ static int vvp_io_read_start(const struct lu_env *env,
 		 * buffers. */
 		io->ci_continue = 0;
 		break;
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 	default:
 		CERROR("Wrong IO type %u\n", vio->cui_io_subtype);
 		LBUG();

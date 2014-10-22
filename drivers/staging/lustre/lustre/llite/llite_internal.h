@@ -861,7 +861,9 @@ enum vvp_io_subtype {
 	/** normal IO */
 	IO_NORMAL,
 	/** io started from splice_{read|write} */
+#ifdef CONFIG_SYSCALL_SPLICE
 	IO_SPLICE
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 };
 
 /* IO subtypes */

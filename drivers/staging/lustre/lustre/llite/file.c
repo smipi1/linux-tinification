@@ -1126,10 +1126,12 @@ restart:
 				down_read(&lli->lli_trunc_sem);
 			}
 			break;
+#ifdef CONFIG_SYSCALL_SPLICE
 		case IO_SPLICE:
 			vio->u.splice.cui_pipe = args->u.splice.via_pipe;
 			vio->u.splice.cui_flags = args->u.splice.via_flags;
 			break;
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 		default:
 			CERROR("Unknown IO type - %u\n", vio->cui_io_subtype);
 			LBUG();
@@ -1223,6 +1225,7 @@ static ssize_t ll_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	return result;
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 /*
  * Send file content (through pagecache) somewhere with helper
  */
@@ -1247,6 +1250,7 @@ static ssize_t ll_file_splice_read(struct file *in_file, loff_t *ppos,
 	cl_env_put(env, &refcheck);
 	return result;
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 static int ll_lov_recreate(struct inode *inode, struct ost_id *oi,
 			   obd_count ost_idx)
@@ -3078,7 +3082,7 @@ struct file_operations ll_file_operations = {
 	.release	= ll_file_release,
 	.mmap	   = ll_file_mmap,
 	.llseek	 = ll_file_seek,
-	.splice_read    = ll_file_splice_read,
+	SPLICE_READ_INIT(ll_file_splice_read)
 	.fsync	  = ll_fsync,
 	.flush	  = ll_flush
 };
@@ -3093,7 +3097,7 @@ struct file_operations ll_file_operations_flock = {
 	.release	= ll_file_release,
 	.mmap	   = ll_file_mmap,
 	.llseek	 = ll_file_seek,
-	.splice_read    = ll_file_splice_read,
+	SPLICE_READ_INIT(ll_file_splice_read)
 	.fsync	  = ll_fsync,
 	.flush	  = ll_flush,
 	.flock	  = ll_file_flock,
@@ -3111,7 +3115,7 @@ struct file_operations ll_file_operations_noflock = {
 	.release	= ll_file_release,
 	.mmap	   = ll_file_mmap,
 	.llseek	 = ll_file_seek,
-	.splice_read    = ll_file_splice_read,
+	SPLICE_READ_INIT(ll_file_splice_read)
 	.fsync	  = ll_fsync,
 	.flush	  = ll_flush,
 	.flock	  = ll_file_noflock,
