@@ -311,6 +311,7 @@ xfs_file_read_iter(
 	return ret;
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 STATIC ssize_t
 xfs_file_splice_read(
 	struct file		*infilp,
@@ -342,6 +343,7 @@ xfs_file_splice_read(
 	xfs_rw_iunlock(ip, XFS_IOLOCK_SHARED);
 	return ret;
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 /*
  * This routine is called to handle zeroing any space in the last block of the
@@ -1415,8 +1417,8 @@ const struct file_operations xfs_file_operations = {
 	.write		= new_sync_write,
 	.read_iter	= xfs_file_read_iter,
 	.write_iter	= xfs_file_write_iter,
-	.splice_read	= xfs_file_splice_read,
-	.splice_write	= iter_file_splice_write,
+	SPLICE_READ_INIT(xfs_file_splice_read)
+	SPLICE_WRITE_INIT(iter_file_splice_write)
 	.unlocked_ioctl	= xfs_file_ioctl,
 #ifdef CONFIG_COMPAT
 	.compat_ioctl	= xfs_file_compat_ioctl,
