@@ -2704,7 +2704,7 @@ const struct file_operations btrfs_file_operations = {
 	.read		= new_sync_read,
 	.write		= new_sync_write,
 	.read_iter      = generic_file_read_iter,
-	.splice_read	= generic_file_splice_read,
+	SPLICE_READ_INIT(generic_file_splice_read)
 	.write_iter	= btrfs_file_write_iter,
 	.mmap		= btrfs_file_mmap,
 	.open		= generic_file_open,
