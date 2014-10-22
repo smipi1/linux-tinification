@@ -42,6 +42,7 @@ coda_file_read(struct file *coda_file, char __user *buf, size_t count, loff_t *p
 	return host_file->f_op->read(host_file, buf, count, ppos);
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 static ssize_t
 coda_file_splice_read(struct file *coda_file, loff_t *ppos,
 		      struct pipe_inode_info *pipe, size_t count,
@@ -62,6 +63,7 @@ coda_file_splice_read(struct file *coda_file, loff_t *ppos,
 
 	return splice_read(host_file, ppos, pipe, count, flags);
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 static ssize_t
 coda_file_write(struct file *coda_file, const char __user *buf, size_t count, loff_t *ppos)
@@ -237,6 +239,6 @@ const struct file_operations coda_file_operations = {
 	.open		= coda_open,
 	.release	= coda_release,
 	.fsync		= coda_fsync,
-	.splice_read	= coda_file_splice_read,
+	SPLICE_READ_INIT(coda_file_splice_read)
 };
 
