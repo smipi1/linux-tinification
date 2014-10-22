@@ -131,14 +131,16 @@ static int bad_file_flock(struct file *filp, int cmd, struct file_lock *fl)
 	return -EIO;
 }
 
-static ssize_t bad_file_splice_write(struct pipe_inode_info *pipe,
+static ssize_t __maybe_unused bad_file_splice_write(
+			struct pipe_inode_info *pipe,
 			struct file *out, loff_t *ppos, size_t len,
 			unsigned int flags)
 {
 	return -EIO;
 }
 
-static ssize_t bad_file_splice_read(struct file *in, loff_t *ppos,
+static ssize_t __maybe_unused bad_file_splice_read(
+			struct file *in, loff_t *ppos,
 			struct pipe_inode_info *pipe, size_t len,
 			unsigned int flags)
 {
@@ -168,8 +170,8 @@ static const struct file_operations bad_file_ops =
 	.get_unmapped_area = bad_file_get_unmapped_area,
 	.check_flags	= bad_file_check_flags,
 	.flock		= bad_file_flock,
-	.splice_write	= bad_file_splice_write,
-	.splice_read	= bad_file_splice_read,
+	SPLICE_WRITE_INIT(bad_file_splice_write)
+	SPLICE_READ_INIT(bad_file_splice_read)
 };
 
 static int bad_inode_create (struct inode *dir, struct dentry *dentry,
