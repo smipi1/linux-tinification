@@ -155,8 +155,8 @@ static const struct file_operations socket_file_ops = {
 	.release =	sock_close,
 	.fasync =	sock_fasync,
 	.sendpage =	sock_sendpage,
-	.splice_write = generic_splice_sendpage,
-	.splice_read =	sock_splice_read,
+	SPLICE_WRITE_INIT(generic_splice_sendpage)
+	SPLICE_READ_INIT(sock_splice_read)
 };
 
 /*
@@ -881,7 +881,8 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
 	return kernel_sendpage(sock, page, offset, size, flags);
 }
 
-static ssize_t sock_splice_read(struct file *file, loff_t *ppos,
+static ssize_t __maybe_unused sock_splice_read(
+				struct file *file, loff_t *ppos,
 				struct pipe_inode_info *pipe, size_t len,
 				unsigned int flags)
 {
