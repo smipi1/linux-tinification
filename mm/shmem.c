@@ -1626,6 +1626,7 @@ static ssize_t shmem_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
 	return retval ? retval : error;
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 static ssize_t shmem_file_splice_read(struct file *in, loff_t *ppos,
 				struct pipe_inode_info *pipe, size_t len,
 				unsigned int flags)
@@ -1739,6 +1740,7 @@ static ssize_t shmem_file_splice_read(struct file *in, loff_t *ppos,
 	}
 	return error;
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 /*
  * llseek SEEK_DATA or SEEK_HOLE through the radix_tree.
@@ -3088,8 +3090,8 @@ static const struct file_operations shmem_file_operations = {
 	.read_iter	= shmem_file_read_iter,
 	.write_iter	= generic_file_write_iter,
 	.fsync		= noop_fsync,
-	.splice_read	= shmem_file_splice_read,
-	.splice_write	= iter_file_splice_write,
+	SPLICE_READ_INIT(shmem_file_splice_read)
+	SPLICE_WRITE_INIT(iter_file_splice_write)
 	.fallocate	= shmem_fallocate,
 #endif
 };
