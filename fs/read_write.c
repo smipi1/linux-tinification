@@ -32,7 +32,7 @@ const struct file_operations generic_ro_fops = {
 	.read		= new_sync_read,
 	.read_iter	= generic_file_read_iter,
 	.mmap		= generic_file_readonly_mmap,
-	.splice_read	= generic_file_splice_read,
+	SPLICE_READ_INIT(generic_file_splice_read)
 };
 
 EXPORT_SYMBOL(generic_ro_fops);
