@@ -1201,6 +1201,7 @@ static const struct pipe_buf_operations relay_pipe_buf_ops = {
 	.get = generic_pipe_buf_get,
 };
 
+#ifdef CONFIG_SYSCALL_SPLICE
 static void relay_page_release(struct splice_pipe_desc *spd, unsigned int i)
 {
 }
@@ -1338,6 +1339,7 @@ static ssize_t relay_file_splice_read(struct file *in,
 
 	return ret;
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 const struct file_operations relay_file_operations = {
 	.open		= relay_file_open,
@@ -1346,7 +1348,7 @@ const struct file_operations relay_file_operations = {
 	.read		= relay_file_read,
 	.llseek		= no_llseek,
 	.release	= relay_file_release,
-	.splice_read	= relay_file_splice_read,
+	SPLICE_READ_INIT(relay_file_splice_read)
 };
 EXPORT_SYMBOL_GPL(relay_file_operations);
 
