@@ -10,7 +10,7 @@ obj-y :=	open.o read_write.o file_table.o super.o \
 		ioctl.o readdir.o select.o dcache.o inode.o \
 		attr.o bad_inode.o file.o filesystems.o namespace.o \
 		seq_file.o xattr.o libfs.o fs-writeback.o \
-		pnode.o splice.o sync.o utimes.o \
+		pnode.o sync.o utimes.o \
 		stack.o fs_struct.o statfs.o fs_pin.o
 
 ifeq ($(CONFIG_BLOCK),y)
@@ -20,6 +20,8 @@ obj-y +=	no-block.o
 endif
 
 obj-$(CONFIG_PROC_FS) += proc_namespace.o
+
+obj-$(CONFIG_SYSCALL_SPLICE)	+= splice.o
 
 obj-y				+= notify/
 obj-$(CONFIG_EPOLL)		+= eventpoll.o
