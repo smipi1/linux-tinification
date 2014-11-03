@@ -779,6 +779,7 @@ found:
 	return ra;
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 /*
  * Grab and keep cached pages associated with a file in the svc_rqst
  * so that they can be passed to the network sendmsg/sendpage routines
@@ -818,6 +819,7 @@ static int nfsd_direct_splice_actor(struct pipe_inode_info *pipe,
 {
 	return __splice_from_pipe(pipe, sd, nfsd_splice_actor);
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 static __be32
 nfsd_finish_read(struct file *file, unsigned long *count, int host_err)
@@ -831,6 +833,7 @@ nfsd_finish_read(struct file *file, unsigned long *count, int host_err)
 		return nfserrno(host_err);
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 __be32 nfsd_splice_read(struct svc_rqst *rqstp,
 		     struct file *file, loff_t offset, unsigned long *count)
 {
@@ -846,6 +849,7 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp,
 	host_err = splice_direct_to_actor(file, &sd, nfsd_direct_splice_actor);
 	return nfsd_finish_read(file, count, host_err);
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 __be32 nfsd_readv(struct file *file, loff_t offset, struct kvec *vec, int vlen,
 		unsigned long *count)
@@ -864,9 +868,11 @@ static __be32
 nfsd_vfs_read(struct svc_rqst *rqstp, struct file *file,
 	      loff_t offset, struct kvec *vec, int vlen, unsigned long *count)
 {
+#ifdef CONFIG_SYSCALL_SPLICE
 	if (file->f_op->splice_read && rqstp->rq_splice_ok)
 		return nfsd_splice_read(rqstp, file, offset, count);
 	else
+#endif
 		return nfsd_readv(file, offset, vec, vlen, count);
 }
 
