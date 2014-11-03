@@ -10,6 +10,7 @@
 
 #include <linux/pipe_fs_i.h>
 
+#ifdef CONFIG_SYSCALL_SPLICE
 /*
  * Flags passed in from splice/tee/vmsplice
  */
@@ -83,4 +84,6 @@ extern void splice_shrink_spd(struct splice_pipe_desc *);
 extern void spd_release_page(struct splice_pipe_desc *, unsigned int);
 
 extern const struct pipe_buf_operations page_cache_pipe_buf_ops;
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
+
 #endif
