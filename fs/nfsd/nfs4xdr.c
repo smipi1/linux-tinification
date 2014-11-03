@@ -3060,6 +3060,7 @@ nfsd4_encode_open_downgrade(struct nfsd4_compoundres *resp, __be32 nfserr, struc
 	return nfserr;
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 static __be32 nfsd4_encode_splice_read(
 				struct nfsd4_compoundres *resp,
 				struct nfsd4_read *read,
@@ -3119,6 +3120,7 @@ static __be32 nfsd4_encode_splice_read(
 
 	return 0;
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
 				 struct nfsd4_read *read,
@@ -3216,9 +3218,11 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
 			goto err_truncate;
 	}
 
+#ifdef CONFIG_SYSCALL_SPLICE
 	if (file->f_op->splice_read && resp->rqstp->rq_splice_ok)
 		err = nfsd4_encode_splice_read(resp, read, file, maxcount);
 	else
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 		err = nfsd4_encode_readv(resp, read, file, maxcount);
 
 	if (!read->rd_filp)
