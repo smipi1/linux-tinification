@@ -870,6 +870,7 @@ struct sg_list {
 	struct scatterlist *sg;
 };
 
+#ifdef CONFIG_SYSCALL_SPLICE
 static int pipe_to_sg(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
 			struct splice_desc *sd)
 {
@@ -976,6 +977,7 @@ error_out:
 	pipe_unlock(pipe);
 	return ret;
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 static unsigned int port_fops_poll(struct file *filp, poll_table *wait)
 {
@@ -1109,7 +1111,7 @@ static const struct file_operations port_fops = {
 	.open  = port_fops_open,
 	.read  = port_fops_read,
 	.write = port_fops_write,
-	.splice_write = port_fops_splice_write,
+	SPLICE_WRITE_INIT(port_fops_splice_write)
 	.poll  = port_fops_poll,
 	.release = port_fops_release,
 	.fasync = port_fops_fasync,
