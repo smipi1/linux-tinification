@@ -610,6 +610,7 @@ static ssize_t aio_write_null(struct kiocb *iocb, const struct iovec *iov,
 	return iov_length(iov, nr_segs);
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 static int pipe_to_null(struct pipe_inode_info *info, struct pipe_buffer *buf,
 			struct splice_desc *sd)
 {
@@ -621,6 +622,7 @@ static ssize_t splice_write_null(struct pipe_inode_info *pipe, struct file *out,
 {
 	return splice_from_pipe(pipe, out, ppos, len, flags, pipe_to_null);
 }
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 static ssize_t read_zero(struct file *file, char __user *buf,
 			 size_t count, loff_t *ppos)
@@ -769,7 +771,7 @@ static const struct file_operations null_fops = {
 	.write		= write_null,
 	.aio_read	= aio_read_null,
 	.aio_write	= aio_write_null,
-	.splice_write	= splice_write_null,
+	SPLICE_WRITE_INIT(splice_write_null)
 };
 
 #ifdef CONFIG_DEVPORT
