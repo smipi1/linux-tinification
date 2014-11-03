@@ -686,6 +686,7 @@ static void tcp_push(struct sock *sk, int flags, int mss_now,
 	__tcp_push_pending_frames(sk, mss_now, nonagle);
 }
 
+#ifdef CONFIG_SYSCALL_SPLICE
 static int tcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
 				unsigned int offset, size_t len)
 {
@@ -805,6 +806,7 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
 	return ret;
 }
 EXPORT_SYMBOL(tcp_splice_read);
+#endif /* #ifdef CONFIG_SYSCALL_SPLICE */
 
 struct sk_buff *sk_stream_alloc_skb(struct sock *sk, int size, gfp_t gfp)
 {

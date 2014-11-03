@@ -917,7 +917,7 @@ const struct proto_ops inet_stream_ops = {
 	.recvmsg	   = inet_recvmsg,
 	.mmap		   = sock_no_mmap,
 	.sendpage	   = inet_sendpage,
-	.splice_read	   = tcp_splice_read,
+	SPLICE_READ_INIT(tcp_splice_read)
 #ifdef CONFIG_COMPAT
 	.compat_setsockopt = compat_sock_common_setsockopt,
 	.compat_getsockopt = compat_sock_common_getsockopt,
