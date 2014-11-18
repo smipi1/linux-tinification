@@ -4600,7 +4600,7 @@ tracing_fill_pipe_page(size_t rem, struct trace_iterator *iter)
 	return rem;
 }
 
-static ssize_t tracing_splice_read_pipe(struct file *filp,
+static ssize_t __maybe_unused tracing_splice_read_pipe(struct file *filp,
 					loff_t *ppos,
 					struct pipe_inode_info *pipe,
 					size_t len,
@@ -5217,7 +5217,7 @@ static const struct file_operations tracing_pipe_fops = {
 	.open		= tracing_open_pipe,
 	.poll		= tracing_poll_pipe,
 	.read		= tracing_read_pipe,
-	.splice_read	= tracing_splice_read_pipe,
+	.splice_read	= __splice_p(tracing_splice_read_pipe),
 	.release	= tracing_release_pipe,
 	.llseek		= no_llseek,
 };
@@ -5271,7 +5271,7 @@ static const struct file_operations snapshot_raw_fops = {
 	.open		= snapshot_raw_open,
 	.read		= tracing_buffers_read,
 	.release	= tracing_buffers_release,
-	.splice_read	= tracing_buffers_splice_read,
+	.splice_read	= __splice_p(tracing_buffers_splice_read),
 	.llseek		= no_llseek,
 };
 
@@ -5481,7 +5481,7 @@ static void buffer_spd_release(struct splice_pipe_desc *spd, unsigned int i)
 	spd->partial[i].private = 0;
 }
 
-static ssize_t
+static ssize_t __maybe_unused
 tracing_buffers_splice_read(struct file *file, loff_t *ppos,
 			    struct pipe_inode_info *pipe, size_t len,
 			    unsigned int flags)
@@ -5611,7 +5611,7 @@ static const struct file_operations tracing_buffers_fops = {
 	.read		= tracing_buffers_read,
 	.poll		= tracing_buffers_poll,
 	.release	= tracing_buffers_release,
-	.splice_read	= tracing_buffers_splice_read,
+	.splice_read	= __splice_p(tracing_buffers_splice_read),
 	.llseek		= no_llseek,
 };
 

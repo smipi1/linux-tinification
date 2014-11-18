@@ -311,7 +311,7 @@ xfs_file_read_iter(
 	return ret;
 }
 
-STATIC ssize_t
+STATIC ssize_t __maybe_unused
 xfs_file_splice_read(
 	struct file		*infilp,
 	loff_t			*ppos,
@@ -1415,7 +1415,7 @@ const struct file_operations xfs_file_operations = {
 	.write		= new_sync_write,
 	.read_iter	= xfs_file_read_iter,
 	.write_iter	= xfs_file_write_iter,
-	.splice_read	= xfs_file_splice_read,
+	.splice_read	= __splice_p(xfs_file_splice_read),
 	.splice_write	= iter_file_splice_write,
 	.unlocked_ioctl	= xfs_file_ioctl,
 #ifdef CONFIG_COMPAT

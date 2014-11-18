@@ -616,7 +616,7 @@ static int pipe_to_null(struct pipe_inode_info *info, struct pipe_buffer *buf,
 	return sd->len;
 }
 
-static ssize_t splice_write_null(struct pipe_inode_info *pipe, struct file *out,
+static ssize_t __maybe_unused splice_write_null(struct pipe_inode_info *pipe, struct file *out,
 				 loff_t *ppos, size_t len, unsigned int flags)
 {
 	return splice_from_pipe(pipe, out, ppos, len, flags, pipe_to_null);
@@ -769,7 +769,7 @@ static const struct file_operations null_fops = {
 	.write		= write_null,
 	.aio_read	= aio_read_null,
 	.aio_write	= aio_write_null,
-	.splice_write	= splice_write_null,
+	.splice_write	= __splice_p(splice_write_null),
 };
 
 #ifdef CONFIG_DEVPORT

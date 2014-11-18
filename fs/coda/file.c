@@ -42,7 +42,7 @@ coda_file_read(struct file *coda_file, char __user *buf, size_t count, loff_t *p
 	return host_file->f_op->read(host_file, buf, count, ppos);
 }
 
-static ssize_t
+static ssize_t __maybe_unused
 coda_file_splice_read(struct file *coda_file, loff_t *ppos,
 		      struct pipe_inode_info *pipe, size_t count,
 		      unsigned int flags)
@@ -237,6 +237,6 @@ const struct file_operations coda_file_operations = {
 	.open		= coda_open,
 	.release	= coda_release,
 	.fsync		= coda_fsync,
-	.splice_read	= coda_file_splice_read,
+	.splice_read	= __splice_p(coda_file_splice_read),
 };
 

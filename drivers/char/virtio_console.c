@@ -914,7 +914,7 @@ static int pipe_to_sg(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
 }
 
 /* Faster zero-copy write by splicing */
-static ssize_t port_fops_splice_write(struct pipe_inode_info *pipe,
+static ssize_t __maybe_unused port_fops_splice_write(struct pipe_inode_info *pipe,
 				      struct file *filp, loff_t *ppos,
 				      size_t len, unsigned int flags)
 {
@@ -1109,7 +1109,7 @@ static const struct file_operations port_fops = {
 	.open  = port_fops_open,
 	.read  = port_fops_read,
 	.write = port_fops_write,
-	.splice_write = port_fops_splice_write,
+	.splice_write = __splice_p(port_fops_splice_write),
 	.poll  = port_fops_poll,
 	.release = port_fops_release,
 	.fasync = port_fops_fasync,

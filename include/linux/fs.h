@@ -2461,6 +2461,12 @@ extern int blkdev_fsync(struct file *filp, loff_t start, loff_t end,
 extern void block_sync_page(struct page *page);
 
 #ifdef CONFIG_SYSCALL_SPLICE
+#define __splice_p(x) x
+#else
+#define __splice_p(x) NULL
+#endif
+
+#ifdef CONFIG_SYSCALL_SPLICE
 /* fs/splice.c */
 extern ssize_t generic_file_splice_read(struct file *, loff_t *,
 		struct pipe_inode_info *, size_t, unsigned int);
@@ -2474,25 +2480,25 @@ extern ssize_t generic_splice_sendpage(struct pipe_inode_info *pipe,
 static inline ssize_t generic_file_splice_read(struct file *in, loff_t *ppos,
 		struct pipe_inode_info *pipe, size_t len, unsigned int flags)
 {
-	return 0;
+	return -EPERM;
 }
 
 static inline ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
 		struct pipe_inode_info *pipe, size_t len, unsigned int flags)
 {
-	return 0;
+	return -EPERM;
 }
 
 static inline ssize_t iter_file_splice_write(struct pipe_inode_info *pipe,
 		struct file *out, loff_t *ppos, size_t len, unsigned int flags)
 {
-	return 0;
+	return -EPERM;
 }
 
 static inline ssize_t generic_splice_sendpage(struct pipe_inode_info *pipe,
 		struct file *out, loff_t *ppos, size_t len, unsigned int flags)
 {
-	return 0;
+	return -EPERM;
 }
 #endif
 

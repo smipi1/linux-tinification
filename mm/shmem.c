@@ -1626,7 +1626,8 @@ static ssize_t shmem_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
 	return retval ? retval : error;
 }
 
-static ssize_t shmem_file_splice_read(struct file *in, loff_t *ppos,
+
+static ssize_t __maybe_unused shmem_file_splice_read(struct file *in, loff_t *ppos,
 				struct pipe_inode_info *pipe, size_t len,
 				unsigned int flags)
 {
@@ -3088,8 +3089,8 @@ static const struct file_operations shmem_file_operations = {
 	.read_iter	= shmem_file_read_iter,
 	.write_iter	= generic_file_write_iter,
 	.fsync		= noop_fsync,
-	.splice_read	= shmem_file_splice_read,
-	.splice_write	= iter_file_splice_write,
+	.splice_read	= __splice_p(shmem_file_splice_read),
+	.splice_write	= __splice_p(iter_file_splice_write),
 	.fallocate	= shmem_fallocate,
 #endif
 };

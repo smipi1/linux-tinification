@@ -1301,7 +1301,7 @@ out:
 	return ret;
 }
 
-static ssize_t relay_file_splice_read(struct file *in,
+static ssize_t __maybe_unused relay_file_splice_read(struct file *in,
 				      loff_t *ppos,
 				      struct pipe_inode_info *pipe,
 				      size_t len,
@@ -1346,7 +1346,7 @@ const struct file_operations relay_file_operations = {
 	.read		= relay_file_read,
 	.llseek		= no_llseek,
 	.release	= relay_file_release,
-	.splice_read	= relay_file_splice_read,
+	.splice_read	= __splice_p(relay_file_splice_read),
 };
 EXPORT_SYMBOL_GPL(relay_file_operations);
 
