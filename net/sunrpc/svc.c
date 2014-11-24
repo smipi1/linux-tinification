@@ -1084,7 +1084,7 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
 		goto err_short_len;
 
 	/* Will be turned off only in gss privacy case: */
-	rqstp->rq_splice_ok = true;
+	rqstp->rq_splice_ok = IS_ENABLED(CONFIG_SPLICE_SYSCALL);
 	/* Will be turned off only when NFSv4 Sessions are used */
 	rqstp->rq_usedeferral = true;
 	rqstp->rq_dropme = false;
